@@ -1,5 +1,6 @@
 
 #include <cstring.h>
+#include <wiringPi.h>
 
 // Pascal Stang's 5x7 font library:
 #include "font5x7.h"
@@ -47,8 +48,13 @@ void LedDisplay::begin(
 	void
 )
 {
+	// initialise wiringPi
+	// is this the best place to initialise this?
+	wiringPiSetup () ;
+
  // set pin modes for connections:
 	//TODO: this is how the arv sets up pins, we will need to replace it with the GPIO setup for the rpi
+	//NOTE(Ben): these funcion names and argumants are the same as used in wiringPi, thus there is probably no need to rewrite these.
   pinMode(dataPin, OUTPUT);//TODO: this
   pinMode(registerSelect, OUTPUT);//TODO: this
   pinMode(clockPin, OUTPUT);//TODO: this
