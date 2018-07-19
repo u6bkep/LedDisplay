@@ -1,8 +1,13 @@
-#include "LedDisplayPi.h"
+
+#include <cstring.h>
 
 // Pascal Stang's 5x7 font library:
 #include "font5x7.h"
 
+#include "LedDisplayPi.h"
+
+// version 4 was the avr code
+#define VERSION_NUMBER 5;
 
 LedDisplay::LedDisplay(
 	uint8_t _dataPin,
@@ -38,7 +43,9 @@ LedDisplay::LedDisplay(
 /*
  * 	Initialize the display.
  */
-void LedDisplay::begin()
+void LedDisplay::begin(
+	void
+)
 {
  // set pin modes for connections:
 	//TODO: this is how the arv sets up pins, we will need to replace it with the GPIO setup for the rpi
@@ -51,7 +58,7 @@ void LedDisplay::begin()
   // reset the display:
   //TODO: this drives pins on the arv and will need to be updated for the rpi
   digitalWrite(resetPin, LOW);//TODO: this
-  delay(10);////TODO:  sleep?
+  sleep(10);
   digitalWrite(resetPin, HIGH);//TODO: this
 
 
@@ -66,7 +73,9 @@ void LedDisplay::begin()
  * 	Clear the display
  */
 //done: leave as is.
-void LedDisplay::clear()
+void LedDisplay::clear(
+	void
+)
 {
 	this->setString(stringBuffer);
 	for (int displayPos = 0; displayPos < displayLength; displayPos++) {
@@ -82,7 +91,9 @@ void LedDisplay::clear()
  * 	set the cursor to the home position (0)
  */
 //done: leave as is.
-void LedDisplay::home()
+void LedDisplay::home(
+	void
+)
 {
 	// set the cursor to the upper left corner:
 	this->cursorPos = 0;
@@ -92,7 +103,9 @@ void LedDisplay::home()
  * 	set the cursor anywhere
  */
 //done: leave as is.
-void LedDisplay::setCursor(int whichPosition)
+void LedDisplay::setCursor(
+	int whichPosition
+)
 {
 	this->cursorPos = whichPosition;
 }
@@ -101,7 +114,9 @@ void LedDisplay::setCursor(int whichPosition)
  * 	return the cursor position
  */
 //done: leave as is.
-int LedDisplay::getCursor()
+int LedDisplay::getCursor(
+	void
+)
 {
 	return this->cursorPos;
 }
@@ -134,12 +149,13 @@ size_t LedDisplay::write(
 /*
  * 	Scroll the displayString across the display.  left = -1, right = +1
  */
-
-void LedDisplay::scroll(int direction)
+void LedDisplay::scroll(
+	int direction
+)
 {
 	cursorPos += direction;
 	//  length of the string to display:
-	int stringEnd = strlen(displayString); //TODO: needs stdio? (was that cstring?)
+	int stringEnd = strlen(displayString);
 
 	// Loop over the string and take displayLength characters to write to the display:
    	for (int displayPos = 0; displayPos < displayLength; displayPos++) {
@@ -161,32 +177,35 @@ void LedDisplay::scroll(int direction)
 	loadDotRegister();
 }
 
-
 /*
  * 	set displayString
  */
 //done: leave as is.
-void LedDisplay::setString(const char * _displayString)
+void LedDisplay::setString(
+	const char * _displayString
+)
 {
 	this->displayString = _displayString;
 }
-
 
 /*
  * 	return displayString
  */
 //done: leave as is.
-const char * LedDisplay::getString()
+const char * LedDisplay::getString(
+	void
+)
 {
 	return displayString;
 }
-
 
 /*
  * 	return displayString length
  */
 //done: leave as is.	
-int LedDisplay::stringLength()
+int LedDisplay::stringLength(
+	void
+)
 {
 	return strlen(displayString);
 }	
@@ -195,7 +214,9 @@ int LedDisplay::stringLength()
  * 	set brightness (0 - 15)
  */
 //done: leave as is.	
-void LedDisplay::setBrightness(uint8_t bright)
+void LedDisplay::setBrightness(
+	uint8_t bright
+)
 {
     // Limit the brightness
     if (bright > 15) {
@@ -206,13 +227,15 @@ void LedDisplay::setBrightness(uint8_t bright)
     loadAllControlRegisters(B01110000 + bright);
 }
 
-
 /* this method loads bits into the dot register array. It doesn't
  * actually communicate with the display at all,
  * it just prepares the data:
 */
 
-void LedDisplay::writeCharacter(char whatCharacter, byte whatPosition)
+void LedDisplay::writeCharacter(
+	char whatCharacter, 
+	byte whatPosition
+)
 {
   // calculate the starting position in the array.
   // every character has 5 columns made of 8 bits:
@@ -220,14 +243,15 @@ void LedDisplay::writeCharacter(char whatCharacter, byte whatPosition)
 
   // copy the appropriate bits into the dot register array:
   for (int i = 0; i < 5; i++) {
-    dotRegister[thisPosition+i] = (pgm_read_byte(&Font5x7[((whatCharacter - 0x20) * 5) + i]));
-    //TODO: pgm_read_byte is from an arv lib, this will need to change 
+    dotRegister[thisPosition+i] = &Font5x7[((whatCharacter - 0x20) * 5) + i];
   }
 }
 
 // This method sends 8 bits to one of the control registers:
 //TODO: fix all of this :(
-void LedDisplay::loadControlRegister(uint8_t dataByte)
+void LedDisplay::loadControlRegister(
+	uint8_t dataByte
+)
 {
   // select the control registers:
   digitalWrite(registerSelect, HIGH);//TODO: No
@@ -243,7 +267,9 @@ void LedDisplay::loadControlRegister(uint8_t dataByte)
 
 // This method sends 8 bits to the control registers in all chips:
 //done: leave as is.
-void LedDisplay::loadAllControlRegisters(uint8_t dataByte)
+void LedDisplay::loadAllControlRegisters(
+	uint8_t dataByte
+)
 {
 
   // Each display can have more than one control chip, and displays
@@ -275,7 +301,10 @@ void LedDisplay::loadAllControlRegisters(uint8_t dataByte)
 
 
 // this method originally sent 320 bits to the dot register: 12_30_09 ML
-void LedDisplay::loadDotRegister() {
+void LedDisplay::loadDotRegister(
+	void
+)
+{
 
   // define max data to send, patch for 4 length displays by KaR]V[aN
   int maxData = displayLength * 5;
@@ -295,9 +324,11 @@ void LedDisplay::loadDotRegister() {
 /*
   version() returns the version of the library:
 */
-int LedDisplay::version(void)
+int LedDisplay::version(
+	void
+)
 {
-  return 4;//TODO: update this?
+  return VERSION_NUMBER;
 }
 
 
