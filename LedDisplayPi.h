@@ -2,13 +2,18 @@
 #ifndef LedDisplay_h
 #define LedDisplay_h
 
-#include <stdint.h>
+#include <cstring>
+#include <cstdint>
+//#include <iostream>
+//#include <string>
+//#include <stdlib.h>
+//#include "Print.h"
 
 // supports up to four 8 character displays, connected as documented here,
 // under "Multiple Displays" http://playground.arduino.cc/Main/LedDisplay
 #define LEDDISPLAY_MAXCHARS  32 //TODO: find a reason this is limited or remove the limitation
 
-class LedDisplay : public Print {
+class LedDisplay {
   public:
     // constructor:
    LedDisplay(uint8_t _dataPin,
@@ -26,7 +31,7 @@ class LedDisplay : public Print {
 	void home();						// set cursor to far left hand position
 	void setCursor(int whichPosition);	// set cursor to any position
 	int  getCursor();					// get the cursor position
-	virtual size_t write(uint8_t b);    // write a character to the display and advance cursor
+	size_t write(uint8_t b);    // write a character to the display and advance cursor
 	void setString(const char* _stringToDisplay);	// set the displayString variable
 	const char * getString();						// get the displayString
 	int stringLength();							// get the length of displayString

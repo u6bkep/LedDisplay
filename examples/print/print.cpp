@@ -11,7 +11,7 @@
 
 #define displayLength 8        // number of characters in the display
 
-void main(void)
+int main(void)
 {
 	// create am instance of the LED display library:
 	LedDisplay myDisplay = LedDisplay(dataPin, registerSelect, clockPin,

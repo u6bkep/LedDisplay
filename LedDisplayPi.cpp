@@ -1,5 +1,5 @@
 
-#include <cstring.h>
+//#include <cstring.h>
 #include <wiringPi.h>
 
 // Pascal Stang's 5x7 font library:
