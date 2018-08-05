@@ -1,6 +1,7 @@
 
 //#include <cstring.h>
 #include <wiringPi.h>
+#include <wiringShift.h>
 
 // Pascal Stang's 5x7 font library:
 #include "font5x7.h"
@@ -42,6 +43,20 @@ LedDisplay::LedDisplay(
 }
 
 /*
+ * 	print replacment
+ */
+void LedDisplay::print(
+	string *charPtr
+)
+{
+	int printLength = strlen(charPtr);
+	for(int index = 0; index < printLength; index++)
+	{
+		LedDisplay::write(charPtr++)
+	}
+}
+
+/*
  * 	Initialize the display.
  */
 void LedDisplay::begin(
@@ -53,26 +68,24 @@ void LedDisplay::begin(
 	wiringPiSetup () ;
 
  // set pin modes for connections:
-	//TODO: this is how the arv sets up pins, we will need to replace it with the GPIO setup for the rpi
 	//NOTE(Ben): these funcion names and argumants are the same as used in wiringPi, thus there is probably no need to rewrite these.
-  pinMode(dataPin, OUTPUT);//TODO: this
-  pinMode(registerSelect, OUTPUT);//TODO: this
-  pinMode(clockPin, OUTPUT);//TODO: this
-  pinMode(chipEnable, OUTPUT);//TODO: this
-  pinMode(resetPin, OUTPUT);//TODO: this
+	pinMode(dataPin, OUTPUT);
+	pinMode(registerSelect, OUTPUT);
+	pinMode(clockPin, OUTPUT);
+	pinMode(chipEnable, OUTPUT);
+	pinMode(resetPin, OUTPUT);
 
-  // reset the display:
-  //TODO: this drives pins on the arv and will need to be updated for the rpi
-  digitalWrite(resetPin, LOW);//TODO: this
-  sleep(10);
-  digitalWrite(resetPin, HIGH);//TODO: this
+	// reset the display:
+	digitalWrite(resetPin, LOW);
+	sleep(10);
+	digitalWrite(resetPin, HIGH);
 
 
-  // load dot register with lows
-  loadDotRegister(); //done: leave as is.
+	// load dot register with lows
+	loadDotRegister(); //done: leave as is.
 
-  // set control register 0 for max brightness, and no sleep:
-  loadAllControlRegisters(B01111111); //done: leave as is.
+	// set control register 0 for max brightness, and no sleep:
+	loadAllControlRegisters(B01111111); //done: leave as is.
 }
 
 /*
@@ -165,19 +178,19 @@ void LedDisplay::scroll(
 
 	// Loop over the string and take displayLength characters to write to the display:
    	for (int displayPos = 0; displayPos < displayLength; displayPos++) {
-	  // which character in the strings you want:
-	  int whichCharacter =  displayPos - cursorPos;
-	 // which character you want to show from the string:
-	  char charToShow;
-	  // display the characters until you have no more:
-	  if ((whichCharacter >= 0) && (whichCharacter < stringEnd)) {
+		// which character in the strings you want:
+		int whichCharacter =  displayPos - cursorPos;
+		// which character you want to show from the string:
+		char charToShow;
+		// display the characters until you have no more:
+		if ((whichCharacter >= 0) && (whichCharacter < stringEnd)) {
 		charToShow = displayString[whichCharacter];
-	  } else {
-	    // if none of the above, show a space:
+		} else {
+		// if none of the above, show a space:
 		charToShow = ' ';
-	  }
-	  // put the character in the dot register:
-	  writeCharacter(charToShow, displayPos);
+		}
+		// put the character in the dot register:
+		writeCharacter(charToShow, displayPos);
 	}
 	// send the dot register array out to the display:
 	loadDotRegister();
@@ -254,19 +267,19 @@ void LedDisplay::writeCharacter(
 }
 
 // This method sends 8 bits to one of the control registers:
-//TODO: fix all of this :(
 void LedDisplay::loadControlRegister(
 	uint8_t dataByte
 )
 {
   // select the control registers:
-  digitalWrite(registerSelect, HIGH);//TODO: No
+  digitalWrite(registerSelect, HIGH);
   // enable writing to the display:
-  digitalWrite(chipEnable, LOW);//TODO: wrong
+  digitalWrite(chipEnable, LOW);
   // shift the data out:
-  shiftOut(dataPin, clockPin, MSBFIRST, dataByte);//TODO: Nope
+  shiftOut(dataPin, clockPin, MSBFIRST, dataByte);
+  //TODO: this should work now but would be better to replace with RPi spi HW
   // disable writing:
-  digitalWrite(chipEnable, HIGH);//TODO: this also
+  digitalWrite(chipEnable, HIGH);
 }
 
 
@@ -316,15 +329,16 @@ void LedDisplay::loadDotRegister(
   int maxData = displayLength * 5;
 
   // select the dot register:
-  digitalWrite(registerSelect, LOW);//TODO: replace with rpi gpio control
+  digitalWrite(registerSelect, LOW);
   // enable writing to the display:
-  digitalWrite(chipEnable, LOW);//TODO: replace with rpi gpio control
+  digitalWrite(chipEnable, LOW);
   // shift the data out:
   for (int i = 0; i < maxData; i++) {
-    shiftOut(dataPin, clockPin, MSBFIRST, dotRegister[i]);//TODO: replace shiftOut with rpi gpio control
+	shiftOut(dataPin, clockPin, MSBFIRST, dotRegister[i]);
+	//TODO: this should work now but would be better to replace with RPi spi HW
   }
   // disable writing:
-  digitalWrite(chipEnable, HIGH);//TODO: replace with rpi gpio control
+  digitalWrite(chipEnable, HIGH);
 }
 
 /*
