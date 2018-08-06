@@ -45,7 +45,7 @@ LedDisplay::LedDisplay(
 /*
  * 	print replacment
  */
-void printCharArray(
+void LedDisplay::printCharArray(
 	char *charPtr
 )
 {
