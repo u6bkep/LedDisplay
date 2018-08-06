@@ -23,7 +23,7 @@ class LedDisplay {
 			  uint8_t _resetPin,
 			  uint8_t _displayLength);
 
-	void print(char *charPtr);
+	void printCharArray(char *charPtr);
 
 	// initializer method:
 	void begin();
@@ -50,7 +50,7 @@ class LedDisplay {
 
   private:
   	// Character display setters:
-	void writeCharacter(char whatCharacter, byte whatPosition);	// write a character to a buffer which will
+	void writeCharacter(char whatCharacter, char whatPosition);	// write a character to a buffer which will
 																// be sent to the display by loadDotRegister()
 
 	int cursorPos;				// position of the cursor

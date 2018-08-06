@@ -13,6 +13,7 @@
 
 int main(void)
 {
+	char helloWorldArray[] = "Hello world!";
 	// create am instance of the LED display library:
 	LedDisplay myDisplay = LedDisplay(dataPin, registerSelect, clockPin,
                                       enable, reset, displayLength);
@@ -28,7 +29,8 @@ int main(void)
 		// set cursor to 0
 		myDisplay.home();
 		// print the time
-		myDisplay.print("Hello world!");
+
+		myDisplay.printCharArray(helloWorldArray);
 	}
 
 
