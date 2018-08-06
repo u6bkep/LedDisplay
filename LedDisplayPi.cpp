@@ -45,8 +45,8 @@ LedDisplay::LedDisplay(
 /*
  * 	print replacment
  */
-void LedDisplay::print(
-	string *charPtr
+void print(
+	char *charPtr
 )
 {
 	int printLength = strlen(charPtr);
@@ -253,12 +253,12 @@ void LedDisplay::setBrightness(
 
 void LedDisplay::writeCharacter(
 	char whatCharacter, 
-	byte whatPosition
+	char whatPosition
 )
 {
   // calculate the starting position in the array.
   // every character has 5 columns made of 8 bits:
-  byte thisPosition =  whatPosition * 5;
+  char thisPosition =  whatPosition * 5;
 
   // copy the appropriate bits into the dot register array:
   for (int i = 0; i < 5; i++) {

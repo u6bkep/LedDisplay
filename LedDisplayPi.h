@@ -23,6 +23,7 @@ class LedDisplay {
 			  uint8_t _resetPin,
 			  uint8_t _displayLength);
 
+	void print(char *charPtr);
 
 	// initializer method:
 	void begin();

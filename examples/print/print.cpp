@@ -28,7 +28,7 @@ int main(void)
 		// set cursor to 0
 		myDisplay.home();
 		// print the time
-		myDisplay.print(std::chrono::system_clock::now());
+		myDisplay.print("Hello world!");
 	}
 
 
