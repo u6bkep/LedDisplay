@@ -3,9 +3,11 @@
 #include <wiringPi.h>
 #include <wiringShift.h>
 
+#include <chrono>
+#include <thread>
+
 // Pascal Stang's 5x7 font library:
 #include "font5x7.h"
-
 #include "LedDisplayPi.h"
 
 // version 4 was the avr code
@@ -46,13 +48,14 @@ LedDisplay::LedDisplay(
  * 	print replacment
  */
 void LedDisplay::printCharArray(
-	char *charPtr
+	uint8_t *charPtr
 )
 {
-	int printLength = strlen(charPtr);
+	int printLength = strlen((char*)charPtr);
 	for(int index = 0; index < printLength; index++)
 	{
-		LedDisplay::write(charPtr++)
+		LedDisplay::write(*charPtr); 
+		charPtr++;
 	}
 }
 
@@ -67,7 +70,7 @@ void LedDisplay::begin(
 	// is this the best place to initialise this?
 	wiringPiSetup () ;
 
- // set pin modes for connections:
+	// set pin modes for connections:
 	//NOTE(Ben): these funcion names and argumants are the same as used in wiringPi, thus there is probably no need to rewrite these.
 	pinMode(dataPin, OUTPUT);
 	pinMode(registerSelect, OUTPUT);
@@ -77,7 +80,7 @@ void LedDisplay::begin(
 
 	// reset the display:
 	digitalWrite(resetPin, LOW);
-	sleep(10);
+	std::this_thread::sleep_for(std::chrono::milliseconds(10000));
 	digitalWrite(resetPin, HIGH);
 
 
@@ -85,7 +88,7 @@ void LedDisplay::begin(
 	loadDotRegister(); //done: leave as is.
 
 	// set control register 0 for max brightness, and no sleep:
-	loadAllControlRegisters(B01111111); //done: leave as is.
+	loadAllControlRegisters(0x7F);
 }
 
 /*
@@ -243,7 +246,7 @@ void LedDisplay::setBrightness(
     }
   
     // set the brightness:
-    loadAllControlRegisters(B01110000 + bright);
+    loadAllControlRegisters(0x70 + bright);
 }
 
 /* this method loads bits into the dot register array. It doesn't
@@ -262,7 +265,7 @@ void LedDisplay::writeCharacter(
 
   // copy the appropriate bits into the dot register array:
   for (int i = 0; i < 5; i++) {
-    dotRegister[thisPosition+i] = &Font5x7[((whatCharacter - 0x20) * 5) + i];
+    dotRegister[thisPosition+i] = (uint8_t) Font5x7[((whatCharacter - 0x20) * 5) + i];
   }
 }
 
@@ -307,7 +310,7 @@ void LedDisplay::loadAllControlRegisters(
   // For each chip in the chain, write the control word that will put
   // it into simultaneous mode (seriel mode is the power-up default).
   for (int i = 0; i < chip_count; i++) {
-    loadControlRegister(B10000001);
+    loadControlRegister(0x81);
   }
 
   // Load the specified value into the control register.
@@ -315,7 +318,7 @@ void LedDisplay::loadAllControlRegisters(
 
   // Put all the chips back into serial mode. Because they're still
   // all in simultaneous mode, we only have to write this word once.
-  loadControlRegister(B10000000);
+  loadControlRegister(0x80);
 }
 
 

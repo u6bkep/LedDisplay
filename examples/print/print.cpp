@@ -30,7 +30,7 @@ int main(void)
 		myDisplay.home();
 		// print the time
 
-		myDisplay.printCharArray(helloWorldArray);
+		myDisplay.printCharArray((uint8_t*)helloWorldArray);
 	}
 
 
