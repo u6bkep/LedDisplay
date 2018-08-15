@@ -13,6 +13,10 @@
 // version 4 was the avr code
 #define VERSION_NUMBER 5;
 
+using namespace std;
+
+namespace LedDisplay
+{
 LedDisplay::LedDisplay(
 	uint8_t _dataPin,
 	uint8_t _registerSelect,
@@ -356,6 +360,6 @@ int LedDisplay::version(
 
 
 
-
+}
 
 

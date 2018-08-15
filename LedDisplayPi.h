@@ -12,6 +12,8 @@
 // supports up to four 8 character displays, connected as documented here,
 // under "Multiple Displays" http://playground.arduino.cc/Main/LedDisplay
 #define LEDDISPLAY_MAXCHARS  32 //TODO: find a reason this is limited or remove the limitation
+namespace LedDisplay
+{
 
 class LedDisplay {
   public:
@@ -66,5 +68,5 @@ class LedDisplay {
 	char stringBuffer[LEDDISPLAY_MAXCHARS+1];  // buffer to hold initial display string
 	const char * displayString;	// string for scrolling
 };
-
+}
 #endif
