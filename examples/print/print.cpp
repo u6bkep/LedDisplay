@@ -15,8 +15,8 @@ int main(void)
 {
 	char helloWorldArray[] = "Hello world!";
 	// create am instance of the LED display library:
-	LedDisplay myDisplay = LedDisplay(dataPin, registerSelect, clockPin,
-                                      enable, reset, displayLength);
+	LedDisplay::LedDisplay myDisplay = LedDisplay(dataPin, registerSelect, clockPin,
+                         enable, reset, displayLength);
 	int brightness = 15;        // screen brightness
 
 	// initialize the display library:
