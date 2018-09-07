@@ -1,6 +1,7 @@
 #include "LedDisplayPi.h"
 #include <chrono>
 #include <thread>
+#include <cstdio>
 
 // Define pins for the LED display.
 // You can change these, just re-wire your board:
@@ -16,7 +17,7 @@ using namespace LedDisplaynstest;
 
 int main(void)
 {
-	char helloWorldArray[] = "Hello world!";
+	std::string helloWorldstring("Hello world!");
 	// create am instance of the LED display library:
 
 	LedDisplay myDisplay(dataPin, registerSelect, clockPin, enable, reset, displayLength);
@@ -34,7 +35,7 @@ int main(void)
 		myDisplay.home();
 		// print the time
 
-		myDisplay.printCharArray((uint8_t*)helloWorldArray);
+		myDisplay.printf("%s",helloWorldstring.c_str());
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 		brightness += fade;
 		if ( brightness <= 5 )

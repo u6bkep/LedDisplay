@@ -4,6 +4,7 @@
 
 #include <cstring>
 #include <cstdint>
+#include <cstdio>
 //#include <iostream>
 //#include <string>
 //#include <stdlib.h>
@@ -12,10 +13,11 @@
 // supports up to four 8 character displays, connected as documented here,
 // under "Multiple Displays" http://playground.arduino.cc/Main/LedDisplay
 #define LEDDISPLAY_MAXCHARS  32 //TODO: find a reason this is limited or remove the limitation
-namespace LedDisplaynstest
+namespace LedDisplay
 {
 
-class LedDisplay {
+class LedDisplay : public Stream
+{
   public:
     // constructor:
    LedDisplay(uint8_t _dataPin,
@@ -67,6 +69,12 @@ class LedDisplay {
 	uint8_t displayLength;    	// number of bytes needed to pad the string
 	char stringBuffer[LEDDISPLAY_MAXCHARS+1];  // buffer to hold initial display string
 	const char * displayString;	// string for scrolling
+	
+	
+    //used by printf - supply a new _putc virtual function for the new device
+    protected virtual int _putc(int c);
+	//assuming no reads from LCD
+    virtual int _getc();
 };
 }
 #endif

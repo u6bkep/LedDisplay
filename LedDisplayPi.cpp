@@ -13,9 +13,9 @@
 // version 4 was the avr code
 #define VERSION_NUMBER 5;
 
-using namespace std;
+//using namespace std;
 
-namespace LedDisplaynstest
+namespace LedDisplay
 {
 LedDisplay::LedDisplay(
 	uint8_t _dataPin,
@@ -49,7 +49,7 @@ LedDisplay::LedDisplay(
 }
 
 /*
- * 	print replacment
+ * 	print replacment. DEPRICATED: please use LedDisplayPi.printf()
  */
 void LedDisplay::printCharArray(
 	uint8_t *charPtr
@@ -359,6 +359,16 @@ int LedDisplay::version(
 }
 
 
+    //used by printf - supply a new _putc virtual function for the new device
+    protected virtual int LedDisplay::_putc(int c) {
+        write(c); //your new LCD put to print an ASCII character on LCD
+        return 0;
+    };
+//assuming no reads from LCD
+virtual int LedDisplay::_getc() 
+	{
+    return -1;
+    }
 
 }
 

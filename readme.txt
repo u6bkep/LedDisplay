@@ -1,4 +1,6 @@
-LedDisplay Library
+LedDisplayPi Library
+
+This is raspberry pi fork of PaulStoffregen's LedDisplay library for arduino.
 
 For details, see http://www.arduino.cc/playground/Main/LedDisplay
 
