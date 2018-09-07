@@ -15,7 +15,7 @@
 
 using namespace std;
 
-namespace LedDisplay
+namespace LedDisplaynstest
 {
 LedDisplay::LedDisplay(
 	uint8_t _dataPin,
@@ -84,7 +84,7 @@ void LedDisplay::begin(
 
 	// reset the display:
 	digitalWrite(resetPin, LOW);
-	std::this_thread::sleep_for(std::chrono::milliseconds(10000));
+	std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 	digitalWrite(resetPin, HIGH);
 
 

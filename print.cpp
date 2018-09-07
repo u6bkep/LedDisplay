@@ -1,15 +1,16 @@
 #include "LedDisplayPi.h"
 #include <chrono>
+#include <thread>
 
 // Define pins for the LED display.
 // You can change these, just re-wire your board:
-#define dataPin 6              // connects to the display's data in
-#define registerSelect 7       // the display's register select pin
-#define clockPin 8             // the display's clock pin
-#define enable 9               // the display's chip enable pin
-#define reset 10              // the display's reset pin
+#define dataPin 21              // connects to the display's data in
+#define registerSelect 22       // the display's register select pin
+#define clockPin 23             // the display's clock pin
+#define enable 24               // the display's chip enable pin
+#define reset 25              // the display's reset pin
 
-#define displayLength 8        // number of characters in the display
+#define displayLength 16        // number of characters in the display
 
 using namespace LedDisplaynstest;
 
@@ -21,7 +22,7 @@ int main(void)
 	LedDisplay myDisplay(dataPin, registerSelect, clockPin, enable, reset, displayLength);
 
 	int brightness = 15;        // screen brightness
-
+	int fade = -1;
 	// initialize the display library:
 	myDisplay.begin();
 	// set the brightness of the display:
@@ -34,6 +35,17 @@ int main(void)
 		// print the time
 
 		myDisplay.printCharArray((uint8_t*)helloWorldArray);
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		brightness += fade;
+		if ( brightness <= 5 )
+		{
+			fade = 1;
+		}
+		else if ( brightness >= 15 )
+		{
+			fade = -1;
+		}
+		myDisplay.setBrightness(brightness);
 	}
 
 

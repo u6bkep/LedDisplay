@@ -12,7 +12,7 @@
 // supports up to four 8 character displays, connected as documented here,
 // under "Multiple Displays" http://playground.arduino.cc/Main/LedDisplay
 #define LEDDISPLAY_MAXCHARS  32 //TODO: find a reason this is limited or remove the limitation
-namespace LedDisplay
+namespace LedDisplaynstest
 {
 
 class LedDisplay {
